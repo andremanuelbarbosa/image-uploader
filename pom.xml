@@ -31,6 +31,7 @@
   <properties>
     <!-- Dependencies -->
     <vaadin.version>7.3.8</vaadin.version>
+    <spring.version>4.1.4.RELEASE</spring.version>
     <joda.time.version>2.7</joda.time.version>
 
     <!-- Logging -->
@@ -50,6 +51,12 @@
 
   <dependencies>
     <!-- Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
@@ -80,17 +87,17 @@
       <version>${vaadin.version}</version>
     </dependency>
 
-<!--     <dependency> -->
-<!--       <groupId>org.vaadin.addon</groupId> -->
-<!--       <artifactId>easyuploads</artifactId> -->
-<!--       <version>7.3.4</version> -->
-<!--     </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.vaadin.addon</groupId> -->
+    <!-- <artifactId>easyuploads</artifactId> -->
+    <!-- <version>7.3.4</version> -->
+    <!-- </dependency> -->
 
-<!--     <dependency> -->
-<!--       <groupId>com.wcs.wcslib</groupId> -->
-<!--       <artifactId>wcslib-vaadin-widget-multifileupload</artifactId> -->
-<!--       <version>1.9</version> -->
-<!--     </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.wcs.wcslib</groupId> -->
+    <!-- <artifactId>wcslib-vaadin-widget-multifileupload</artifactId> -->
+    <!-- <version>1.9</version> -->
+    <!-- </dependency> -->
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -214,6 +221,7 @@
         <version>2.2</version>
         <configuration>
           <port>9090</port>
+          <skip>${skipTests}</skip>
         </configuration>
         <executions>
           <execution>

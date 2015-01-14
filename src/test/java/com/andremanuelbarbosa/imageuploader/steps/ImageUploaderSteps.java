@@ -1,14 +1,19 @@
 package com.andremanuelbarbosa.imageuploader.steps;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class ImageUploaderSteps {
@@ -82,5 +87,13 @@ public class ImageUploaderSteps {
     webDriver.get(BASE_URL + url);
 
     waitAndTakeScreenshot(10000);
+  }
+
+  @Then("^the User should see the \"(.*?)\" component$")
+  public void the_User_should_see_the_component(String componentId) throws Throwable {
+
+    WebElement webElement = webDriver.findElement(By.id(componentId));
+    
+    assertTrue( webElement.isDisplayed());
   }
 }
