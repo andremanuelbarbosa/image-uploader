@@ -6,7 +6,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/cucumber/features", format = "html:target/cucumber", strict = true)
+@CucumberOptions(features = "src/test/resources/cucumber/features", plugin = "html:target/cucumber", tags = "~@Ignore", strict = true)
 public class ImageUploaderAcceptanceTest {
 
 }

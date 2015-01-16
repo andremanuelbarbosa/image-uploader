@@ -18,11 +18,12 @@ import cucumber.api.java.en.When;
 
 public class ImageUploaderSteps {
 
-  private static final String BASE_URL = "http://localhost:9090/image-uploader";
+  private static final String BASE_URL = "http://localhost:8080/image-uploader";
   private static final String CHROME_DRIVER_VERSION = "2.13";
 
-  static Scenario thisScenario;
   static WebDriver webDriver = createChromeDriver();
+
+  Scenario scenario;
 
   static {
 
@@ -64,8 +65,8 @@ public class ImageUploaderSteps {
 
   void takeScreenshot() {
 
-    thisScenario.write(webDriver.getCurrentUrl());
-    thisScenario.embed(((TakesScreenshot) webDriver).getScreenshotAs(OutputType.BYTES), "image/png");
+    scenario.write(webDriver.getCurrentUrl());
+    scenario.embed(((TakesScreenshot) webDriver).getScreenshotAs(OutputType.BYTES), "image/png");
   }
 
   void waitAndTakeScreenshot(int millis) throws InterruptedException {
@@ -78,7 +79,7 @@ public class ImageUploaderSteps {
   @Before
   public void setUp(Scenario scenario) {
 
-    thisScenario = scenario;
+    this.scenario = scenario;
   }
 
   @When("^the User navigates to \"(.*?)\"$")
@@ -89,11 +90,45 @@ public class ImageUploaderSteps {
     waitAndTakeScreenshot(10000);
   }
 
-  @Then("^the User should see the \"(.*?)\" component$")
-  public void the_User_should_see_the_component(String componentId) throws Throwable {
+  private void assertComponentIsDisplayed(String componentId) {
+
+    assertTrue(webDriver.findElement(By.id(componentId)).isDisplayed());
+  }
+
+  @Then("^the User should see the component with ID \"(.*?)\"$")
+  public void the_User_should_see_the_component_with_ID(String componentId) throws Throwable {
+
+    assertComponentIsDisplayed(componentId);
+  }
+
+  @Then("^the User should see all the components for the Image Panel with index \"(.*?)\"$")
+  public void the_User_should_see_all_the_components_for_the_Image_Panel_with_index(String imageIndex) throws Throwable {
+
+    assertComponentIsDisplayed("imageUploaderImagePanel" + imageIndex);
+    assertComponentIsDisplayed("imageFile" + imageIndex);
+    assertComponentIsDisplayed("imageCaption" + imageIndex);
+    assertComponentIsDisplayed("imageAltTag" + imageIndex);
+  }
+
+  @When("^the User clicks on the component with ID \"(.*?)\"$")
+  public void the_User_clicks_on_the_component_with_ID(String componentId) throws Throwable {
 
     WebElement webElement = webDriver.findElement(By.id(componentId));
-    
-    assertTrue( webElement.isDisplayed());
+
+    webElement.click();
+
+    takeScreenshot();
+  }
+
+  @When("^the User selects the Image File \"(.*?)\" on the Image Panel with index \"(.*?)\"$")
+  public void the_User_selects_the_Image_File_on_the_Image_Panel_with_index(String imageFile, String imageIndex)
+      throws Throwable {
+
+    WebElement webElementImageFile = webDriver.findElement(By.id("imageFile" + imageIndex)).findElement(
+        By.xpath("//input[@type=\"file\"]"));
+
+    webElementImageFile.sendKeys(new File("src/test/resources/images/" + imageFile).getAbsolutePath());
+
+    waitAndTakeScreenshot(10000);
   }
 }
