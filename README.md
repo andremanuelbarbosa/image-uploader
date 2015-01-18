@@ -14,3 +14,5 @@ You might have to pass the version of the Chrome Driver which is compatible with
 mvn clean install -Dchrome.driver.version=2.09
 
 tells the build to use the ChromeDriver version 2.09 instead of the default 2.13, the latest.
+
+You can see the latest Cucumber report on "src/test/resources/cucumber/reports".
