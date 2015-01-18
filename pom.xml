@@ -29,6 +29,8 @@
   </repositories>
 
   <properties>
+    <tomcat.port>8080</tomcat.port>
+
     <!-- Dependencies -->
     <bval.version>0.5</bval.version>
     <vaadin.version>7.3.8</vaadin.version>
@@ -85,6 +87,12 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-client</artifactId>
+      <version>${vaadin.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-themes</artifactId>
       <version>${vaadin.version}</version>
     </dependency>
 
@@ -171,6 +179,35 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.9</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.vaadin</groupId>
+                  <artifactId>vaadin-themes</artifactId>
+                  <version>${vaadin.version}</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/vaadin-themes</outputDirectory>
+                  <includes>VAADIN/**/*</includes>
+                </artifactItem>
+              </artifactItems>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
@@ -215,6 +252,17 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>2.4</version>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${project.build.directory}/vaadin-themes</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <targetPath>/</targetPath>
+            </resource>
+          </webResources>
+        </configuration>
       </plugin>
 
       <plugin>
@@ -222,8 +270,7 @@
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.2</version>
         <configuration>
-          <port>8080</port>
-          <skip>${skipTests}</skip>
+          <port>${tomcat.port}</port>
         </configuration>
         <executions>
           <execution>
@@ -234,6 +281,7 @@
             </goals>
             <configuration>
               <fork>true</fork>
+              <skip>${skipTests}</skip>
             </configuration>
           </execution>
           <execution>
@@ -242,6 +290,9 @@
             <goals>
               <goal>shutdown</goal>
             </goals>
+            <configuration>
+              <skip>${skipTests}</skip>
+            </configuration>
           </execution>
         </executions>
       </plugin>

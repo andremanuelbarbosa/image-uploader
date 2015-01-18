@@ -1,10 +1,13 @@
 package com.andremanuelbarbosa.imageuploader.steps;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +16,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
@@ -101,6 +105,18 @@ public class ImageUploaderSteps {
     assertComponentIsDisplayed(componentId);
   }
 
+  @Then("^the User should not see the component with ID \"(.*?)\"$")
+  public void the_User_should_not_see_the_component_with_ID(String componentId) throws Throwable {
+
+    try {
+
+      assertFalse(webDriver.findElement(By.id(componentId)).isDisplayed());
+
+    } catch (NoSuchElementException e) {
+
+    }
+  }
+
   @Then("^the User should see all the components for the Image Panel with index \"(.*?)\"$")
   public void the_User_should_see_all_the_components_for_the_Image_Panel_with_index(String imageIndex) throws Throwable {
 
@@ -130,5 +146,31 @@ public class ImageUploaderSteps {
     webElementImageFile.sendKeys(new File("src/test/resources/images/" + imageFile).getAbsolutePath());
 
     waitAndTakeScreenshot(10000);
+  }
+
+  @Then("^the User should see the Error Notification with Title \"(.*?)\" and Message \"(.*?)\"$")
+  public void the_User_should_see_the_Error_Notification_with_Title_and_Description(String notificationTitle,
+      String notificationMessage) throws Throwable {
+
+    WebElement webElementErrorNotification = webDriver.findElement(By.className("v-Notification-error"));
+
+    assertEquals(notificationTitle, webElementErrorNotification.findElement(By.tagName("h1")).getText());
+    assertEquals(notificationMessage, webElementErrorNotification.findElement(By.tagName("p")).getText());
+  }
+
+  @Given("^the User enters the value \"(.*?)\" in component with ID \"(.*?)\"$")
+  public void the_User_enters_the_value_in_component_with_ID(String value, String componentId) throws Throwable {
+
+    webDriver.findElement(By.id(componentId)).sendKeys(value);
+  }
+
+  @Then("^the User should see the Success Notification with Title \"(.*?)\" and Message \"(.*?)\"$")
+  public void the_User_should_see_the_Success_Notification_with_Title_and_Message(String notificationTitle,
+      String notificationMessage) throws Throwable {
+
+    WebElement webElementErrorNotification = webDriver.findElement(By.className("v-Notification-tray"));
+
+    assertEquals(notificationTitle, webElementErrorNotification.findElement(By.tagName("h1")).getText());
+    assertEquals(notificationMessage, webElementErrorNotification.findElement(By.tagName("p")).getText());
   }
 }

@@ -14,7 +14,7 @@ public class ImageUploaderImage implements Serializable {
   private String caption;
 
   @NotNull
-  private String altTag = "";
+  private String altTag;
 
   private String fileName;
 

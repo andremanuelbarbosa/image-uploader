@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.andremanuelbarbosa.imageuploader.domain.ImageUploaderImage;
+import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
@@ -29,11 +31,26 @@ public class ImageUploaderUpload implements Receiver, SucceededListener {
   @Override
   public OutputStream receiveUpload(String fileName, String mimeType) {
 
-    imageUploaderImage.setFileName(fileName);
-
     imageOutputStream.reset();
 
-    return imageOutputStream;
+    if (mimeType.startsWith("image/")) {
+
+      imageUploaderImage.setFileName(fileName);
+
+      return imageOutputStream;
+
+    } else {
+
+      try {
+
+        return null;
+
+      } finally {
+
+        new Notification("Invalid Image File", "The selected file is not a valid Image.",
+            Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
+      }
+    }
   }
 
   @Override
